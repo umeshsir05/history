@@ -1,30 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const questionsContainer = document.getElementById('questionsContainer');
-  const menuToggle = document.getElementById('menuToggle');
-  const sidebar = document.getElementById('sidebar');
-  const sidebarOverlay = document.getElementById('sidebarOverlay');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const showAllAnswersBtn = document.getElementById('showAllAnswersBtn');
-  const hideAllAnswersBtn = document.getElementById('hideAllAnswersBtn');
-  const practiceSetBtn = document.getElementById('practiceSetBtn');
+  const container = document.getElementById('questionsContainer');
   const sectionTitle = document.getElementById('sectionTitle');
   const sectionDesc = document.getElementById('sectionDesc');
 
-  // Verify that database is loaded
-  if (!window.modernHistoryMCQs || window.modernHistoryMCQs.length === 0) {
-    questionsContainer.innerHTML = '<p style="color:red; text-align:center; padding:2rem;">डेटा लोड नहीं हो सका। कृपया questions.js चेक करें।</p>';
+  // Diagnostic Check: questions.js load hua ya nahi
+  if (typeof modernHistoryMCQs === 'undefined' || !Array.isArray(modernHistoryMCQs) || modernHistoryMCQs.length === 0) {
+    container.innerHTML = `
+      <div style="background:#fee2e2; border:1px solid #ef4444; color:#991b1b; padding:1.2rem; border-radius:8px; text-align:center;">
+        <p style="font-weight:600; font-size:1.1rem; margin-bottom:0.5rem;">⚠️ Data Load Error</p>
+        <p><code>questions.js</code> file browser tak nahi pahunch rahi hai.</p>
+        <p style="font-size:0.85rem; margin-top:0.4rem; color:#b91c1c;">Kripya check karein ki GitHub par <b>questions.js</b> file ka naam bilkul sahi hai (small letters) aur wo index.html ke saath usi folder me hai.</p>
+      </div>
+    `;
     return;
   }
 
   // Render function
-  function renderQuestions(items) {
-    questionsContainer.innerHTML = '';
+  function renderMCQs(items) {
+    container.innerHTML = '';
     items.forEach(item => {
       const card = document.createElement('div');
       card.className = 'mcq-card';
       card.id = `mcq-${item.id}`;
 
-      const optHtml = item.options.map(opt => `<li>${opt}</li>`).join('');
+      const optionsHtml = item.options.map(opt => `<li>${opt}</li>`).join('');
 
       card.innerHTML = `
         <div class="mcq-header">
@@ -32,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="q-text">${item.q}</span>
         </div>
         <ul class="mcq-options">
-          ${optHtml}
+          ${optionsHtml}
         </ul>
         <button class="ans-toggle-btn" onclick="toggleAnswer(${item.id})">
           <i class="fa-solid fa-lightbulb"></i> उत्तर देखें
@@ -41,84 +40,87 @@ document.addEventListener('DOMContentLoaded', () => {
           <strong>सही उत्तर:</strong> ${item.ans}
         </div>
       `;
-      questionsContainer.appendChild(card);
+      container.appendChild(card);
     });
   }
 
-  // Toggle Single Answer
+  // Toggle Answer
   window.toggleAnswer = function(id) {
-    const ansBox = document.getElementById(`ans-${id}`);
-    const btn = ansBox.previousElementSibling;
-    if (ansBox.classList.contains('show')) {
-      ansBox.classList.remove('show');
+    const box = document.getElementById(`ans-${id}`);
+    const btn = box.previousElementSibling;
+    if (box.classList.contains('show')) {
+      box.classList.remove('show');
       btn.innerHTML = '<i class="fa-solid fa-lightbulb"></i> उत्तर देखें';
     } else {
-      ansBox.classList.add('show');
+      box.classList.add('show');
       btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> उत्तर छुपाएँ';
     }
   };
 
   // Show/Hide All Buttons
-  if (showAllAnswersBtn) {
-    showAllAnswersBtn.addEventListener('click', () => {
-      document.querySelectorAll('.ans-box').forEach(box => box.classList.add('show'));
-      document.querySelectorAll('.ans-toggle-btn').forEach(btn => {
-        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> उत्तर छुपाएँ';
-      });
+  const showBtn = document.getElementById('showAllAnswersBtn');
+  const hideBtn = document.getElementById('hideAllAnswersBtn');
+
+  if (showBtn) {
+    showBtn.addEventListener('click', () => {
+      document.querySelectorAll('.ans-box').forEach(b => b.classList.add('show'));
+      document.querySelectorAll('.ans-toggle-btn').forEach(b => b.innerHTML = '<i class="fa-solid fa-eye-slash"></i> उत्तर छुपाएँ');
     });
   }
 
-  if (hideAllAnswersBtn) {
-    hideAllAnswersBtn.addEventListener('click', () => {
-      document.querySelectorAll('.ans-box').forEach(box => box.classList.remove('show'));
-      document.querySelectorAll('.ans-toggle-btn').forEach(btn => {
-        btn.innerHTML = '<i class="fa-solid fa-lightbulb"></i> उत्तर देखें';
-      });
+  if (hideBtn) {
+    hideBtn.addEventListener('click', () => {
+      document.querySelectorAll('.ans-box').forEach(b => b.classList.remove('show'));
+      document.querySelectorAll('.ans-toggle-btn').forEach(b => b.innerHTML = '<i class="fa-solid fa-lightbulb"></i> उत्तर देखें');
     });
   }
 
-  // Sidebar Controls
-  function openDrawer() {
+  // Hamburger Menu & Sidebar
+  const menuBtn = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const closeBtn = document.getElementById('closeSidebar');
+
+  function openSidebar() {
     sidebar.classList.add('open');
-    sidebarOverlay.classList.add('active');
+    overlay.classList.add('active');
   }
-
-  function closeDrawer() {
+  function closeSidebarMenu() {
     sidebar.classList.remove('open');
-    sidebarOverlay.classList.remove('active');
+    overlay.classList.remove('active');
   }
 
-  if (menuToggle) menuToggle.addEventListener('click', openDrawer);
-  if (closeSidebar) closeSidebar.addEventListener('click', closeDrawer);
-  if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeDrawer);
+  if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+  if (closeBtn) closeBtn.addEventListener('click', closeSidebarMenu);
+  if (overlay) overlay.addEventListener('click', closeSidebarMenu);
 
-  // Practice Set (25 Random MCQs)
-  if (practiceSetBtn) {
-    practiceSetBtn.addEventListener('click', (e) => {
+  // Practice Set (Random 25)
+  const practiceBtn = document.getElementById('practiceSetBtn');
+  if (practiceBtn) {
+    practiceBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      closeDrawer();
-      const shuffled = [...window.modernHistoryMCQs].sort(() => 0.5 - Math.random());
-      const practiceSubset = shuffled.slice(0, 25);
+      closeSidebarMenu();
+      const shuffled = [...modernHistoryMCQs].sort(() => 0.5 - Math.random());
       sectionTitle.textContent = "प्रैक्टिस सेट (यादृच्छिक 25 प्रश्न)";
-      sectionDesc.textContent = "परीक्षा अभ्यास हेतु 25 महत्वपूर्ण प्रश्नों का सेट";
-      renderQuestions(practiceSubset);
+      sectionDesc.textContent = "परीक्षा अभ्यास हेतु 25 महत्वपूर्ण प्रश्न";
+      renderMCQs(shuffled.slice(0, 25));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
-  // Modern History Category Click
+  // Modern History Full Set
   const modernLink = document.querySelector('[data-category="modern"]');
   if (modernLink) {
     modernLink.addEventListener('click', (e) => {
       e.preventDefault();
-      closeDrawer();
+      closeSidebarMenu();
       sectionTitle.textContent = "आधुनिक भारत का इतिहास";
       sectionDesc.textContent = "कुल 1 से 492 वस्तुनिष्ठ प्रश्न (उत्तर कुंजी सहित)";
-      renderQuestions(window.modernHistoryMCQs);
+      renderMCQs(modernHistoryMCQs);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
-  // Load All 492 Questions Initially
-  renderQuestions(window.modernHistoryMCQs);
+  // First Load
+  renderMCQs(modernHistoryMCQs);
 });
