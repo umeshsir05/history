@@ -1,69 +1,53 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>भारतीय इतिहास MCQ अभ्यास</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhartiya Itihas MCQ Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <header class="navbar">
+        <div class="logo">
+            <i class="fas fa-landmark"></i> <span>इतिहास MCQ</span>
+        </div>
+        <div class="nav-controls">
+            <button id="themeToggle" class="theme-btn" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav id="navMenu" class="nav-links">
+            <a href="#" class="nav-link active" data-category="modern">आधुनिक भारत का इतिहास</a>
+            <a href="#" class="nav-link" data-category="ancient">प्राचीन भारत का इतिहास</a>
+            <a href="#" class="nav-link" data-category="medieval">मध्य भारत का इतिहास</a>
+        </nav>
+    </header>
 
-  <!-- Top Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-container">
-      <button class="hamburger-btn" id="menuToggle" aria-label="Menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-      <h1 class="logo-text">इतिहास <span>MCQ पोर्टल</span></h1>
-    </div>
-  </header>
+    <main class="container">
+        <div class="top-bar">
+            <h1 id="sectionTitle">आधुनिक भारत का इतिहास</h1>
+            <button id="practiceBtn" class="practice-btn">
+                <i class="fas fa-random"></i> 50 Questions Practice Set
+            </button>
+        </div>
 
-  <!-- Sidebar Overlay & Drawer -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h2>अध्याय सूची</h2>
-      <button class="close-btn" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <nav class="sidebar-menu">
-      <a href="#" class="menu-item disabled" data-category="ancient">
-        <i class="fa-solid fa-landmark"></i> प्राचीन भारत का इतिहास
-        <span class="badge">जल्द आ रहा है</span>
-      </a>
-      <a href="#" class="menu-item disabled" data-category="medieval">
-        <i class="fa-solid fa-shield-halved"></i> मध्यकालीन भारत का इतिहास
-        <span class="badge">जल्द आ रहा है</span>
-      </a>
-      <a href="#" class="menu-item active" data-category="modern">
-        <i class="fa-solid fa-book-open"></i> आधुनिक भारत का इतिहास
-        <span class="badge count">492 MCQs</span>
-      </a>
-      <hr class="divider">
-      <a href="#" class="menu-item practice-btn" id="practiceSetBtn">
-        <i class="fa-solid fa-pen-to-square"></i> प्रैक्टिस सेट (Random 25)
-      </a>
-    </nav>
-  </aside>
+        <div class="stats-info" id="statsInfo">
+            कुल प्रश्न: <span id="totalQuestionsCount">0</span>
+        </div>
 
-  <!-- Main Content Container -->
-  <main class="main-content">
-    <div class="content-header">
-      <h2 id="sectionTitle">आधुनिक भारत का इतिहास</h2>
-      <p id="sectionDesc">कुल 1 से 492 वस्तुनिष्ठ प्रश्न (उत्तर कुंजी सहित)</p>
-      <div class="filter-bar">
-        <button id="showAllAnswersBtn" class="action-btn"><i class="fa-solid fa-eye"></i> सभी उत्तर दिखाएँ</button>
-        <button id="hideAllAnswersBtn" class="action-btn"><i class="fa-solid fa-eye-slash"></i> सभी उत्तर छुपाएँ</button>
-      </div>
-    </div>
+        <div id="quizContainer" class="quiz-container">
+            <!-- Questions dynamically injected here -->
+        </div>
+    </main>
 
-    <!-- Questions Injection Container -->
-    <div id="questionsContainer" class="questions-list">
-      <!-- MCQs will be rendered dynamically by app.js -->
-    </div>
-  </main>
-  <!-- Dono script files ko is order mein lagayein -->
-  <script src="questions.js"></script>
-  <script src="app.js"></script>
+    <footer>
+        <p>&copy; 2026 Bhartiya Itihas Practice Portal. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
