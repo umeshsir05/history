@@ -241,3 +241,67 @@ footer {
         align-items: flex-start;
     }
 }
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.jump-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 3px 6px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+}
+
+.jump-container input {
+    width: 70px;
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.jump-btn {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+}
+
+.jump-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Card highlight effect on jump */
+.highlight-jump {
+    animation: highlightPulse 2s ease-out;
+}
+
+@keyframes highlightPulse {
+    0% {
+        box-shadow: 0 0 0 4px var(--primary-color);
+        transform: scale(1.01);
+    }
+    100% {
+        box-shadow: var(--box-shadow);
+        transform: scale(1);
+    }
+}
+
