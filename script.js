@@ -724,12 +724,9 @@ const mcqDatabase = {
 
     ]
 };
-// File ke top par jahan baki variables hain wahan add karein:
+// DOM Elements Setup
 const jumpBtn = document.getElementById('jumpBtn');
 const jumpInput = document.getElementById('jumpInput');
-
-let currentCategory = 'modern';
-
 const quizContainer = document.getElementById('quizContainer');
 const sectionTitle = document.getElementById('sectionTitle');
 const totalQuestionsCount = document.getElementById('totalQuestionsCount');
@@ -739,13 +736,20 @@ const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 const practiceBtn = document.getElementById('practiceBtn');
 
+let currentCategory = 'modern';
+
+// Render questions function (Jump target ID ke sath)
 function renderQuestions(questionsList) {
+    if (!quizContainer) return;
     quizContainer.innerHTML = '';
-    totalQuestionsCount.textContent = questionsList.length;
+    totalQuestionsCount.textContent = questionsList ? questionsList.length : 0;
+
+    if (!questionsList || questionsList.length === 0) return;
 
     questionsList.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'mcq-card';
+        card.id = `question-card-${index + 1}`; // Jump ke target ke liye zaroori ID
 
         const optHtml = item.options.map(opt => `<div class="option-item">${opt}</div>`).join('');
 
@@ -763,8 +767,10 @@ function renderQuestions(questionsList) {
     });
 }
 
+// Answer toggle logic
 window.toggleAnswer = function(index) {
     const box = document.getElementById(`ans-${index}`);
+    if (!box) return;
     const btn = box.previousElementSibling;
     if (box.style.display === 'block') {
         box.style.display = 'none';
@@ -775,6 +781,7 @@ window.toggleAnswer = function(index) {
     }
 };
 
+// Navigation menu links
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -789,70 +796,49 @@ navLinks.forEach(link => {
             navMenu.classList.remove('open');
         }
     });
-    
 });
 
-practiceBtn.addEventListener('click', () => {
-    navLinks.forEach(l => l.classList.remove('active'));
-    sectionTitle.textContent = "रैंडम अभ्यास सेट (50 MCQs)";
+// Random 50 questions practice set
+if (practiceBtn) {
+    practiceBtn.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        sectionTitle.textContent = "रैंडम अभ्यास सेट (50 MCQs)";
 
-    let allQuestions = [
-        ...mcqDatabase.ancient,
-        ...mcqDatabase.medieval,
-        ...mcqDatabase.modern
-    ];
+        let allQuestions = [
+            ...(mcqDatabase.ancient || []),
+            ...(mcqDatabase.medieval || []),
+            ...(mcqDatabase.modern || [])
+        ];
 
-    let shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-    let practiceSet = shuffled.slice(0, 50);
+        let shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+        let practiceSet = shuffled.slice(0, 50);
 
-    renderQuestions(practiceSet);
-});
-
-hamburgerBtn.addEventListener('click', () => {
-    navMenu.classList.toggle('open');
-});
-
-themeToggle.addEventListener('click', () => {
-    const isDark = document.body.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-        document.body.removeAttribute('data-theme');
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-    } else {
-        document.body.setAttribute('data-theme', 'dark');
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    }
-});
-
-// Initial load
-//renderQuestions(mcqDatabase[currentCategory]);
-
-function renderQuestions(questionsList) {
-    quizContainer.innerHTML = '';
-    totalQuestionsCount.textContent = questionsList.length;
-
-    questionsList.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'mcq-card';
-        card.id = `question-card-${index + 1}`; // Jump ke target ke liye zaroori hai
-
-        const optHtml = item.options.map(opt => `<div class="option-item">${opt}</div>`).join('');
-
-        card.innerHTML = `
-            <div class="question-text">${item.q}</div>
-            <div class="options-grid">${optHtml}</div>
-            <button class="show-ans-btn" onclick="toggleAnswer(${index})">
-                <i class="fas fa-eye"></i> उत्तर देखें
-            </button>
-            <div class="answer-box" id="ans-${index}">
-                <strong>सही उत्तर:</strong> ${item.ans}
-            </div>
-        `;
-        quizContainer.appendChild(card);
+        renderQuestions(practiceSet);
     });
 }
 
-// File ke bilkul aakhri hisse (renderQuestions(mcqDatabase[currentCategory]); ke theek upar) add karein:
+// Hamburger menu toggle
+if (hamburgerBtn) {
+    hamburgerBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('open');
+    });
+}
 
+// Dark / Light Mode Toggle
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            document.body.removeAttribute('data-theme');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    });
+}
+
+// Jump to Question logic
 function handleJumpToQuestion() {
     const qNum = parseInt(jumpInput.value, 10);
     const targetCard = document.getElementById(`question-card-${qNum}`);
@@ -875,10 +861,30 @@ function handleJumpToQuestion() {
     }
 }
 
-jumpBtn.addEventListener('click', handleJumpToQuestion);
-jumpInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        handleJumpToQuestion();
-    }
-});
+if (jumpBtn) {
+    jumpBtn.addEventListener('click', handleJumpToQuestion);
+}
+if (jumpInput) {
+    jumpInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleJumpToQuestion();
+        }
+    });
+}
 
+// Default Automatic Load on Page Open
+function initializePortal() {
+    currentCategory = 'modern';
+    if (sectionTitle) {
+        sectionTitle.textContent = "आधुनिक भारत का इतिहास";
+    }
+    if (typeof mcqDatabase !== 'undefined' && mcqDatabase[currentCategory]) {
+        renderQuestions(mcqDatabase[currentCategory]);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePortal);
+} else {
+    initializePortal();
+}
