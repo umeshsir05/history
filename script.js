@@ -724,6 +724,9 @@ const mcqDatabase = {
 
     ]
 };
+// File ke top par jahan baki variables hain wahan add karein:
+const jumpBtn = document.getElementById('jumpBtn');
+const jumpInput = document.getElementById('jumpInput');
 
 let currentCategory = 'modern';
 
@@ -820,4 +823,31 @@ themeToggle.addEventListener('click', () => {
 });
 
 // Initial load
-renderQuestions(mcqDatabase[currentCategory]);
+//renderQuestions(mcqDatabase[currentCategory]);
+
+function renderQuestions(questionsList) {
+    quizContainer.innerHTML = '';
+    totalQuestionsCount.textContent = questionsList.length;
+
+    questionsList.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'mcq-card';
+        card.id = `question-card-${index + 1}`; // Jump ke target ke liye zaroori hai
+
+        const optHtml = item.options.map(opt => `<div class="option-item">${opt}</div>`).join('');
+
+        card.innerHTML = `
+            <div class="question-text">${item.q}</div>
+            <div class="options-grid">${optHtml}</div>
+            <button class="show-ans-btn" onclick="toggleAnswer(${index})">
+                <i class="fas fa-eye"></i> उत्तर देखें
+            </button>
+            <div class="answer-box" id="ans-${index}">
+                <strong>सही उत्तर:</strong> ${item.ans}
+            </div>
+        `;
+        quizContainer.appendChild(card);
+    });
+}
+
+
