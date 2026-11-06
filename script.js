@@ -789,6 +789,7 @@ navLinks.forEach(link => {
             navMenu.classList.remove('open');
         }
     });
+    
 });
 
 practiceBtn.addEventListener('click', () => {
@@ -850,4 +851,34 @@ function renderQuestions(questionsList) {
     });
 }
 
+// File ke bilkul aakhri hisse (renderQuestions(mcqDatabase[currentCategory]); ke theek upar) add karein:
+
+function handleJumpToQuestion() {
+    const qNum = parseInt(jumpInput.value, 10);
+    const targetCard = document.getElementById(`question-card-${qNum}`);
+
+    if (targetCard) {
+        const headerOffset = 90;
+        const elementPosition = targetCard.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+
+        targetCard.classList.remove('highlight-jump');
+        void targetCard.offsetWidth;
+        targetCard.classList.add('highlight-jump');
+    } else {
+        alert("Kripya sahi prashn sankhya dalein (1 se " + totalQuestionsCount.textContent + " ke beech).");
+    }
+}
+
+jumpBtn.addEventListener('click', handleJumpToQuestion);
+jumpInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        handleJumpToQuestion();
+    }
+});
 
