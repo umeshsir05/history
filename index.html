@@ -29,11 +29,21 @@
 
     <main class="container">
         <div class="top-bar">
-            <h1 id="sectionTitle">आधुनिक भारत का इतिहास</h1>
-            <button id="practiceBtn" class="practice-btn">
-                <i class="fas fa-random"></i> 50 Questions Practice Set
+    <h1 id="sectionTitle">आधुनिक भारत का इतिहास</h1>
+    <div class="action-buttons">
+        <button id="practiceBtn" class="practice-btn">
+            <i class="fas fa-random"></i> 50 Questions Practice Set
+        </button>
+        <!-- Naya Jump Feature Button & Input Container -->
+        <div class="jump-container">
+            <input type="number" id="jumpInput" placeholder="Q. No." min="1">
+            <button id="jumpBtn" class="jump-btn">
+                <i class="fas fa-arrow-right"></i> Jump
             </button>
         </div>
+    </div>
+</div>
+
 
         <div class="stats-info" id="statsInfo">
             कुल प्रश्न: <span id="totalQuestionsCount">0</span>
